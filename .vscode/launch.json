@@ -1,0 +1,58 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "identity",
+      "type": "java",
+      "request": "launch",
+      "mainClass": "cl.martini.identity.IdentityApplication",
+      "projectName": "identity",
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "SPRING_CONFIG_ADDITIONAL_LOCATION": "file:./.identity-local.properties"
+      }
+    },
+    {
+      "name": "catalog",
+      "type": "java",
+      "request": "launch",
+      "mainClass": "cl.martini.catalog.CatalogApplication",
+      "projectName": "catalog",
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "SPRING_CONFIG_ADDITIONAL_LOCATION": "file:./.catalog-local.properties"
+      }
+    },
+    {
+      "name": "contact",
+      "type": "java",
+      "request": "launch",
+      "mainClass": "cl.martini.contact.ContactApplication",
+      "projectName": "contact",
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "SPRING_CONFIG_ADDITIONAL_LOCATION": "file:./.contact-local.properties"
+      }
+    },
+    {
+      "name": "gateway",
+      "type": "java",
+      "request": "launch",
+      "mainClass": "cl.martini.gateway.GatewayApplication",
+      "projectName": "gateway",
+      "cwd": "${workspaceFolder}"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Backend completo (MySQL local)",
+      "configurations": [
+        "identity",
+        "catalog",
+        "contact",
+        "gateway"
+      ],
+      "stopAll": true
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+x-app: &app
+  restart: unless-stopped
+
+services:
+  gateway:
+    <<: *app
+    build:
+      context: .
+      args:
+        MODULE: gateway
+    ports:
+      - "127.0.0.1:${GATEWAY_PORT:-8090}:8090"
+    environment:
+      CORS_ORIGINS: ${CORS_ORIGINS:-}
+      IDENTITY_URL: http://identity:8081
+      CATALOG_URL: http://catalog:8082
+      CONTACT_URL: http://contact:8083
+    depends_on: [identity, catalog, contact]
+
+  identity:
+    <<: *app
+    build:
+      context: .
+      args:
+        MODULE: identity
+    environment:
+      DB_HOST: ${DB_HOST:-host.docker.internal}
+      DB_PORT: ${DB_PORT:-3306}
+      DB_NAME: martini_identity
+      DB_USER: martini_identity
+      DB_PASSWORD: ${IDENTITY_DB_PASSWORD:?Define IDENTITY_DB_PASSWORD en .env}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+
+  catalog:
+    <<: *app
+    build:
+      context: .
+      args:
+        MODULE: catalog
+    environment:
+      DB_HOST: ${DB_HOST:-host.docker.internal}
+      DB_PORT: ${DB_PORT:-3306}
+      DB_NAME: martini_catalog
+      DB_USER: martini_catalog
+      DB_PASSWORD: ${CATALOG_DB_PASSWORD:?Define CATALOG_DB_PASSWORD en .env}
+      IDENTITY_URL: http://identity:8081
+
+  contact:
+    <<: *app
+    build:
+      context: .
+      args:
+        MODULE: contact
+    environment:
+      DB_HOST: ${DB_HOST:-host.docker.internal}
+      DB_PORT: ${DB_PORT:-3306}
+      DB_NAME: martini_contact
+      DB_USER: martini_contact
+      DB_PASSWORD: ${CONTACT_DB_PASSWORD:?Define CONTACT_DB_PASSWORD en .env}
+      IDENTITY_URL: http://identity:8081
